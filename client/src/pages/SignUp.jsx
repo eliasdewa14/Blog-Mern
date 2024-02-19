@@ -38,12 +38,15 @@ export default function SignUp() {
       });
       const data = await res.json();
       if (data.success === false) {
-        return setErrorMessage("The username or email is incorrect")
+        setLoading(false);
+        return setErrorMessage(data.message);
       }
       setLoading(false);
-      navigate('/sign-in');
+      if (res.ok) {
+        navigate('/sign-in');
+      }
     } catch (error) {
-      setErrorMessage("The username or email is incorrect")
+      setErrorMessage(error.message);
       setLoading(false);
     }
   };
