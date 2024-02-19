@@ -1,6 +1,6 @@
 import { Footer } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import { BsFacebook, BsInstagram, BsTwitter, BsGithub, BsDribbble, BsLinkedin } from 'react-icons/bs';
+import { BsFacebook, BsTwitter, BsGithub, BsLinkedin } from 'react-icons/bs';
 export default function FooterCom() {
   return (
     <Footer container className='border-t-2'>
