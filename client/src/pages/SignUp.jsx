@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
+import { HiInformationCircle } from 'react-icons/hi';
 
 
 export default function SignUp() {
@@ -12,6 +13,9 @@ export default function SignUp() {
   const [loading, setLoading] = useState(false);
   // Navigation
   const navigate = useNavigate();
+
+  // alert state
+  const [alert, setAlert] = useState(false);
 
   // getting data from input
   const handleChange = (e) => {
@@ -34,14 +38,12 @@ export default function SignUp() {
       });
       const data = await res.json();
       if (data.success === false) {
-        return setErrorMessage(data.message)
+        return setErrorMessage("The username or email is incorrect")
       }
       setLoading(false);
-      if (res.ok) {
-        navigate('/sign-in');
-      }
+      navigate('/sign-in');
     } catch (error) {
-      setErrorMessage(error.message)
+      setErrorMessage("The username or email is incorrect")
       setLoading(false);
     }
   };
@@ -100,8 +102,20 @@ export default function SignUp() {
             <span>Have an account?</span>
             <Link to='/sign-in' className="text-blue-500">Sign In</Link>
           </div>
+          {/* <>
+            {alert && (
+              <Alert className="mt-5" color="success" onDismiss={() => setAlert(false)}>
+                <span className="font-medium">Success!</span> You have signed up successfully.
+              </Alert>
+            )}
+          </> */}
           {errorMessage && (
-            <Alert className="mt-5" color='failure'>{errorMessage}</Alert>
+            <Alert className="mt-5" color='failure' icon={HiInformationCircle} onDismiss={() => {
+              setAlert(false)
+              setErrorMessage(null)
+            }}>
+              <span className="font-medium">Failed!</span> {errorMessage}
+            </Alert>
           )}
         </div>
       </div>
