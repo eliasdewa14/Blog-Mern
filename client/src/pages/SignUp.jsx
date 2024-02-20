@@ -14,9 +14,6 @@ export default function SignUp() {
   // Navigation
   const navigate = useNavigate();
 
-  // alert state
-  const [alert, setAlert] = useState(false);
-
   // getting data from input
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id] : e.target.value.trim()});
@@ -44,9 +41,7 @@ export default function SignUp() {
       setLoading(false);
       setAlert(true);
       if (res.ok) {
-        setTimeout(() => {
-          navigate('/');
-        }, 1000);
+        navigate('/sign-in');
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -108,18 +103,8 @@ export default function SignUp() {
             <span>Have an account?</span>
             <Link to='/sign-in' className="text-blue-500">Sign In</Link>
           </div>
-          <>
-            {alert && (
-              <Alert className="mt-5" color="success" onDismiss={() => setAlert(false)}>
-                <span className="font-medium">Success!</span> You have signed up successfully.
-              </Alert>
-            )}
-          </>
           {errorMessage && (
-            <Alert className="mt-5" color='failure' icon={HiInformationCircle} onDismiss={() => {
-              setAlert(false)
-              setErrorMessage(null)
-            }}>
+            <Alert className="mt-5" color='failure' icon={HiInformationCircle}>
               <span className="font-medium">Failed!</span> {errorMessage}
             </Alert>
           )}

@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { HiInformationCircle } from 'react-icons/hi';
+import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 
 
 export default function SignIn() {
@@ -9,13 +11,13 @@ export default function SignIn() {
   const [formData, setFormData] = useState({})
 
   // Initial error and loading state
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const {loading, error: errorMessage} = useSelector(state => state.user);
+
+  // Dispatch
+  const dispatch = useDispatch();
+
   // Navigation
   const navigate = useNavigate();
-
-  // alert state
-  const [alert, setAlert] = useState(false);
 
   // getting data from input
   const handleChange = (e) => {
@@ -26,11 +28,10 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent refreshing the page when submitting
     if (!formData.email ||!formData.password) {
-      return setErrorMessage("Please fill out all required fields")
+      dispatch(signInFailure("Please fill out all required fields"))
     }
     try {
-      setLoading(true)
-      setErrorMessage(null)
+      dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -38,19 +39,14 @@ export default function SignIn() {
       });
       const data = await res.json();
       if (data.success === false) {
-        setLoading(false);
-        return setErrorMessage(data.message);
+        dispatch(signInFailure(data.message));
       }
-      setLoading(false);
-      setAlert(true);
       if (res.ok) {
-        setTimeout(() => {
-          navigate('/');
-        }, 1000);
+        dispatch(signInSuccess(data));
+        navigate('/');
       }
     } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
   return (
@@ -99,18 +95,8 @@ export default function SignIn() {
             <span>Have an account?</span>
             <Link to='/sign-up' className="text-blue-500">Sign Up</Link>
           </div>
-          <>
-            {alert && (
-              <Alert className="mt-5" color="success" onDismiss={() => setAlert(false)}>
-                <span className="font-medium">Success!</span> You have signed in successfully.
-              </Alert>
-            )}
-          </>
           {errorMessage && (
-            <Alert className="mt-5" color='failure' icon={HiInformationCircle} onDismiss={() => {
-              setAlert(false)
-              setErrorMessage(null)
-            }}>
+            <Alert className="mt-5" color='failure' icon={HiInformationCircle}>
               <span className="font-medium">Failed!</span> {errorMessage}
             </Alert>
           )}
@@ -119,3 +105,4 @@ export default function SignIn() {
     </div>
   )
 }
+
