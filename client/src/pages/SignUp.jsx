@@ -42,8 +42,11 @@ export default function SignUp() {
         return setErrorMessage(data.message);
       }
       setLoading(false);
+      setAlert(true);
       if (res.ok) {
-        navigate('/sign-in');
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
       }
     } catch (error) {
       setErrorMessage(error.message);
@@ -105,13 +108,13 @@ export default function SignUp() {
             <span>Have an account?</span>
             <Link to='/sign-in' className="text-blue-500">Sign In</Link>
           </div>
-          {/* <>
+          <>
             {alert && (
               <Alert className="mt-5" color="success" onDismiss={() => setAlert(false)}>
                 <span className="font-medium">Success!</span> You have signed up successfully.
               </Alert>
             )}
-          </> */}
+          </>
           {errorMessage && (
             <Alert className="mt-5" color='failure' icon={HiInformationCircle} onDismiss={() => {
               setAlert(false)
