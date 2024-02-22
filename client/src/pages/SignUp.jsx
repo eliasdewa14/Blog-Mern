@@ -61,7 +61,7 @@ export default function SignUp() {
           <p className="text-sm mt-5">This is a demo project. You can sign up with your email and password or with your google account</p>
         </div>
         {/* Right side */}
-        <div className="flex-1 border border-solid py-10 px-5 rounded-lg bg-slate-300">
+        <div className="flex-1">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
               <Label value="Your username" />
