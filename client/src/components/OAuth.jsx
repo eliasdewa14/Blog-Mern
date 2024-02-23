@@ -42,7 +42,7 @@ export default function OAuth() {
     }
   };
   return (
-    <Button gradientDuoTone='pinkToOrange' outline onClick={handleGoogleClick}>
+    <Button gradientDuoTone='purpleToBlue' outline onClick={handleGoogleClick}>
       <FcGoogle color='blue' className="w-5 h-5 mr-2"/>
       Continue with Google
     </Button>

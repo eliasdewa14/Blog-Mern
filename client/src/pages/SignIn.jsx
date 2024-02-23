@@ -62,7 +62,7 @@ export default function SignIn() {
           <p className="text-sm mt-5">This is a demo project. You can sign in with your email and password or with your google account</p>
         </div>
         {/* Right side */}
-        <div className="flex-1">
+        <div className="flex-1 py-10 px-5 rounded-lg bg-slate-300 dark:bg-[#121212]">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
               <Label value="Your email" />
