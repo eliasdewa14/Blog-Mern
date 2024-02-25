@@ -11,6 +11,24 @@ export const signup = async (req, res, next) => {
     return next(errorHandler(400, 'All fields are required'));
   }
 
+  if (username.length < 6 || username.length > 20) {
+    return next(errorHandler(400, "Username must be between 6 and 20 characters long"));
+  }
+  if (username.includes(' ')) {
+    return next(errorHandler(400, "Username can't contains spaces"));
+  }
+  if (!username.match(/^[a-zA-Z0-9]+$/)) {
+    return next(errorHandler(400, "Username can only contain alphanumeric characters"));
+  }
+
+  // email address
+  if (!email.toLowerCase().match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+    return next(errorHandler(400, "Invalid email address"));
+  }
+
+  if (password.length < 6) {
+    return next(errorHandler(400, "Password must be at least 6 characters"));
+  }
   const hashedPassword = bcryptjs.hashSync(password, 10);
 
   const newUser = new User({
