@@ -50,12 +50,24 @@ export const getPosts = async (req, res, next) => {
     // To get the total posts in last month
     const now = new Date();
     const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-    
     const lastMonthPosts = await Post.countDocuments({
       createdAt: {$gte: oneMonthAgo}
     });
     res.status(200).json({posts, totalPosts, lastMonthPosts});
   } catch (error) {
     next(error);
+  }
+};
+
+export const deletePost = async (req, res, next) => {
+  // check the user is admin or authenticated
+  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+    return next(errorHandler(403, "You are not allowed to delete this post"))
+  }
+  try {
+    await Post.findByIdAndDelete(req.params.postId)
+    res.status(200).json('The post has been deleted')
+  } catch (error) {
+    next(error)
   }
 };
