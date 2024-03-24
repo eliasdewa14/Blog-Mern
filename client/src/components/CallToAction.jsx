@@ -11,7 +11,7 @@ export default function CallToAction() {
         </Button>
       </div>
       <div className="flex-1 p-7">
-        <img src="https://durableprogramming.com/wp-content/uploads/2023/04/JavaScript-logo.png"/>
+        <img src="https://miro.medium.com/v2/resize:fit:1400/1*LyZcwuLWv2FArOumCxobpA.png"/>
       </div>
     </div>
   )
