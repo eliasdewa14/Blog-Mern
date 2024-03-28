@@ -4,7 +4,7 @@ import { FaThumbsUp } from 'react-icons/fa'
 import { useSelector } from 'react-redux';
 import { Button, Textarea } from 'flowbite-react';
 
-export default function Comment({ comment, onLike, onEdit }) {
+export default function Comment({ comment, onLike, onEdit, onDelete}) {
   const [user, setUser] = useState({});
 
   const { currentUser } = useSelector(state => state.user)
@@ -31,6 +31,7 @@ export default function Comment({ comment, onLike, onEdit }) {
     setIsEditing(true);
     setEditedContent(comment.content);
   };
+
   const handleSave = async () => {
     try {
       const res = await fetch(`/api/comment/editComment/${comment._id}`, {
@@ -48,6 +49,7 @@ export default function Comment({ comment, onLike, onEdit }) {
       console.log(error.message);
     }
   };
+
   return (
     <div className='flex p-4 border-b dark:border-gray-600 text-sm'>
       <div className='flex-shrink-0 mr-3'>
@@ -88,7 +90,10 @@ export default function Comment({ comment, onLike, onEdit }) {
               </p>
               <div>
                 {currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) && (
-                  <button type='button' className='text-gray-400 hover:text-blue-500' onClick={handleEdit}>Edit</button>
+                  <div className='flex gap-2'>
+                    <button type='button' className='text-gray-400 hover:text-blue-500' onClick={handleEdit}>Edit</button>
+                    <button type='button' className='text-gray-400 hover:text-red-500' onClick={() => onDelete(comment._id)}>Delete</button>
+                  </div>
                 )}
               </div>
             </div>

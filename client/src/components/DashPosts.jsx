@@ -130,7 +130,7 @@ export default function DashPosts() {
             </div>
           </div>
         </Modal.Body>
-      </Modal>
+    </Modal>
     </div>
   )
 }
