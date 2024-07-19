@@ -2,10 +2,12 @@ import express from 'express';
 import { errorHandler } from '../utils/error.js';
 import User from '../models/user.model.js';
 
+// test
 export const test = (req, res) => {
   res.json({'message': 'API is working'});
 };
 
+// update user
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.userId) {
     return next(errorHandler(400, "You are not allowed to update this user"));
@@ -43,6 +45,7 @@ export const updateUser = async (req, res, next) => {
   }
 };
 
+// delete user
 export const deleteUser =  async (req, res, next) => {
   if (!req.user.isAdmin && req.user.id !== req.params.userId) {
     return next(errorHandler(401, "You are not allowed to delete this user"));
@@ -55,6 +58,7 @@ export const deleteUser =  async (req, res, next) => {
   }
 };
 
+// sign-out user
 export const signout = (req, res, next) => {
   try {
     res.clearCookie('access_token').status(200).json("User has been logged out");
@@ -63,6 +67,7 @@ export const signout = (req, res, next) => {
   }
 };
 
+// get all users
 export const getUsers =  async (req, res, next) => {
   if (!req.user.isAdmin) {
     return next(errorHandler(401, "You are not allowed to see the users"));
@@ -96,6 +101,7 @@ export const getUsers =  async (req, res, next) => {
   }
 };
 
+// get a user
 export const getUser =  async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId);

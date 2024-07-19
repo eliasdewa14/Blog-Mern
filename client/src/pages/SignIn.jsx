@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
+import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
-import { HiInformationCircle } from 'react-icons/hi';
 import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import OAuth from "../components/OAuth.jsx";
+import toast from "react-hot-toast";
 
 
 export default function SignIn() {
@@ -28,9 +28,6 @@ export default function SignIn() {
   //submit the data to the server
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent refreshing the page when submitting
-    if (!formData.email ||!formData.password) {
-      dispatch(signInFailure("Please fill out all required fields"))
-    }
     try {
       dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
@@ -41,13 +38,16 @@ export default function SignIn() {
       const data = await res.json();
       if (data.success === false) {
         dispatch(signInFailure(data.message));
+        toast.error(data.message);
       }
       if (res.ok) {
         dispatch(signInSuccess(data));
+        toast.success("Signed in successfully");
         navigate('/');
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
+      toast.error(error.message);
     }
   };
   return (
@@ -97,11 +97,6 @@ export default function SignIn() {
             <span>Don't have an account?</span>
             <Link to='/sign-up' className="text-blue-500">Sign Up</Link>
           </div>
-          {errorMessage && (
-            <Alert className="mt-5" color='failure' icon={HiInformationCircle}>
-              <span className="font-medium">Failed!</span> {errorMessage}
-            </Alert>
-          )}
         </div>
       </div>
     </div>

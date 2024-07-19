@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
+import { Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
-import { HiInformationCircle } from 'react-icons/hi';
 import OAuth from "../components/OAuth";
+import toast from 'react-hot-toast';
 
 
 export default function SignUp() {
@@ -10,7 +10,6 @@ export default function SignUp() {
   const [formData, setFormData] = useState({})
 
   // Initial error and loading state
-  const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   // Navigation
   const navigate = useNavigate();
@@ -23,12 +22,8 @@ export default function SignUp() {
   //submit the data to the server
   const handleSubmit = async (e) => {
     e.preventDefault(); // prevent refreshing the page when submitting
-    if (!formData.username || !formData.email ||!formData.password) {
-      return setErrorMessage("Please fill out all required fields")
-    }
     try {
       setLoading(true)
-      setErrorMessage(null)
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -37,16 +32,16 @@ export default function SignUp() {
       const data = await res.json();
       if (data.success === false) {
         setLoading(false);
-        return setErrorMessage(data.message);
+        toast.error(data.message);
       }
       setLoading(false);
-      setAlert(true);
       if (res.ok) {
+        toast.success("User Signed Up Successfully");
         navigate('/sign-in');
       }
     } catch (error) {
-      setErrorMessage(error.message);
       setLoading(false);
+      toast.error(error.message);
     }
   };
   return (
@@ -105,11 +100,6 @@ export default function SignUp() {
             <span>Have an account?</span>
             <Link to='/sign-in' className="text-blue-500">Sign In</Link>
           </div>
-          {errorMessage && (
-            <Alert className="mt-5" color='failure' icon={HiInformationCircle}>
-              <span className="font-medium">Failed!</span> {errorMessage}
-            </Alert>
-          )}
         </div>
       </div>
     </div>

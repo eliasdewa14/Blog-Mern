@@ -2,18 +2,51 @@ import { Link } from 'react-router-dom';
 import CallToAction from '../components/CallToAction';
 import { useEffect, useState } from 'react';
 import PostCard from '../components/PostCard';
+import { useLocation} from 'react-router-dom';
+
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+
+  const [showMore, setShowMore] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchPosts = async () => {
       const res = await fetch('/api/post/getPosts');
       const data = await res.json();
-      setPosts(data.posts);
+      if (res.ok) {
+        setPosts(data.posts);
+        if (data.posts.length === 9) {
+          setShowMore(true);
+        } else {
+          setShowMore(false);
+        }
+      }
     };
     fetchPosts();
   }, []);
+
+  const handleShowMore = async () => {
+    const numberOfPosts = posts.length;
+    const startIndex = numberOfPosts;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set('startIndex', startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/post/getposts?${searchQuery}`);
+    if (!res.ok) {
+      return;
+    }
+    if (res.ok) {
+      const data = await res.json();
+      setPosts([...posts, ...data.posts]);
+      if (data.posts.length === 9) {
+        setShowMore(true);
+      } else {
+        setShowMore(false);
+      }
+    }
+  };
 
   return (
     <div className='min-h-screen'>
@@ -42,12 +75,14 @@ export default function Home() {
                 <PostCard key={post._id} post={post} />
               ))}
             </div>
-            <Link
-              to={'/search'}
-              className='text-lg text-teal-500 hover:underline text-center'
-            >
-              View all posts
-            </Link>
+            {showMore && (
+              <button
+                onClick={handleShowMore}
+                className='text-teal-500 text-lg hover:underline p-7 w-full'
+              >
+                Show More
+              </button>
+            )}
           </div>
         )}
       </div>
